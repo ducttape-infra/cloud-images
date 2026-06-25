@@ -1,0 +1,39 @@
+name: Download and push AlmaLinux cloud image to cloud-images registry
+
+on:
+  push:
+    branches:
+      - 'ubuntu'
+  pull_request:
+    branches:
+      - 'ubuntu'
+
+jobs:
+  download-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup ducttape tool from releases
+        uses: ducttape-infra/ducttape-install-action@v0.8
+
+      - name: Push image to registry
+        env:
+          IMAGE_NAME: almalinux-cloud
+          REGISTRY_USER: ${{ github.actor }}
+          REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+          BASE_DIR: /home/runner/.local/share/ducttape/base-images
+          IMAGE_URL: https://repo.almalinux.org/almalinux/9/cloud/x86_64/images/AlmaLinux-9-GenericCloud-9.6-20250522.x86_64.qcow2
+        run: |
+          echo "Prepare folders..."
+          mkdir -p ${BASE_DIR}
+
+          echo "Downloading image..."
+          curl -fSL "${IMAGE_URL}" -o ${BASE_DIR}/${IMAGE_NAME}.qcow2
+
+          echo "Verify ..."
+          ls -al ${BASE_DIR}
+          sha256sum "${BASE_DIR}/${IMAGE_NAME}.qcow2"
+
+          echo "Pushing image..."
+          ducttape push ${IMAGE_NAME} ghcr.io/ducttape-infra/cloud-images/${IMAGE_NAME}:9
+
+
