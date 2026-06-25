@@ -1,0 +1,39 @@
+name: Download and push CentOS cloud image to cloud-images registry
+
+on:
+  push:
+    branches:
+      - 'centos'
+  pull_request:
+    branches:
+      - 'centos'
+
+jobs:
+  download-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup ducttape tool from releases
+        uses: ducttape-infra/ducttape-install-action@v0.8
+
+      - name: Push image to registry
+        env:
+          IMAGE_NAME: centos-cloud
+          REGISTRY_USER: ${{ github.actor }}
+          REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+          BASE_DIR: /home/runner/.local/share/ducttape/base-images
+          IMAGE_URL: https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-GenericCloud-x86_64-9-20250812.1.x86_64.qcow2
+        run: |
+          echo "Prepare folders..."
+          mkdir -p ${BASE_DIR}
+
+          echo "Downloading image..."
+          curl -fSL "${IMAGE_URL}" -o ${BASE_DIR}/${IMAGE_NAME}.qcow2
+
+          echo "Verify ..."
+          ls -al ${BASE_DIR}
+          sha256sum "${BASE_DIR}/${IMAGE_NAME}.qcow2"
+
+          echo "Pushing image..."
+          ducttape push ${IMAGE_NAME} ghcr.io/ducttape-infra/cloud-images/${IMAGE_NAME}:9
+
+
