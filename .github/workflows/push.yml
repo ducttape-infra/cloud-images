@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Setup ducttape tool from releases
-        uses: ducttape-infra/ducttape-install-action@v0.8
+        uses: ducttape-infra/ducttape-install-action@v0.9
 
       - name: Push image to registry
         env:
@@ -21,7 +21,7 @@ jobs:
           REGISTRY_USER: ${{ github.actor }}
           REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
           BASE_DIR: /home/runner/.local/share/ducttape/base-images
-          IMAGE_URL: https://download.fedoraproject.org/pub/fedora/linux/releases/42/Cloud/x86_64/images/Fedora-Cloud-Base-Generic-42-1.1.x86_64.qcow2
+          IMAGE_URL: https://eu.edge.kernel.org/fedora/releases/43/Cloud/x86_64/images/Fedora-Cloud-Base-Generic-43-1.6.x86_64.qcow2
         run: |
           echo "Prepare folders..."
           mkdir -p ${BASE_DIR}
@@ -34,6 +34,5 @@ jobs:
           sha256sum "${BASE_DIR}/${IMAGE_NAME}.qcow2"
 
           echo "Pushing image..."
-          ducttape push ${IMAGE_NAME} ghcr.io/ducttape-infra/cloud-images/fedora-cloud:42
-
+          ducttape push ${IMAGE_NAME} ghcr.io/ducttape-infra/cloud-images/fedora-cloud:43
 
