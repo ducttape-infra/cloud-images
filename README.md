@@ -12,3 +12,4 @@ Different [branches exist](https://github.com/ducttape-infra/cloud-images/branch
   - [AlmaLinux](https://github.com/ducttape-infra/cloud-images/tree/almalinux)
   - [RockyLinux](https://github.com/ducttape-infra/cloud-images/tree/rockylinux)
   - [OpenSUSE](https://github.com/ducttape-infra/cloud-images/tree/opensuse)
+  - [FreeBSD](https://github.com/ducttape-infra/cloud-images/tree/freebsd)
