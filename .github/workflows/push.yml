@@ -1,0 +1,40 @@
+name: Download and push FreeBSD cloud image to cloud-images registry
+
+on:
+  push:
+    branches:
+      - 'freebsd'
+  pull_request:
+    branches:
+      - 'freebsd'
+
+jobs:
+  download-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup ducttape tool from releases
+        uses: ducttape-infra/ducttape-install-action@v0.8
+
+      - name: Push image to registry
+        env:
+          IMAGE_NAME: freebsd-cloud
+          REGISTRY_USER: ${{ github.actor }}
+          REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+          BASE_DIR: /home/runner/.local/share/ducttape/base-images
+          IMAGE_URL: https://download.freebsd.org/releases/VM-IMAGES/15.1-RELEASE/amd64/Latest/FreeBSD-15.1-RELEASE-amd64-BASIC-CLOUDINIT-ufs.qcow2.xz
+        run: |
+          echo "Prepare folders..."
+          mkdir -p ${BASE_DIR}
+
+          echo "Downloading image..."
+          curl -fSL "${IMAGE_URL}" -o ${IMAGE_NAME}.qcow2.xz
+          xz -d ${IMAGE_NAME}.qcow2.xz
+          mv ${IMAGE_NAME}.qcow2 ${BASE_DIR}/${IMAGE_NAME}.qcow2
+
+          echo "Verify ..."
+          ls -al ${BASE_DIR}
+          sha256sum "${BASE_DIR}/${IMAGE_NAME}.qcow2"
+
+          echo "Pushing image..."
+          ducttape push ${IMAGE_NAME} ghcr.io/ducttape-infra/cloud-images/${IMAGE_NAME}:15.1
+
