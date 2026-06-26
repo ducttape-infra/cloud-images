@@ -21,7 +21,7 @@ jobs:
           REGISTRY_USER: ${{ github.actor }}
           REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
           BASE_DIR: /home/runner/.local/share/ducttape/base-images
-          IMAGE_URL: https://eu.edge.kernel.org/fedora/releases/43/Cloud/x86_64/images/Fedora-Cloud-Base-Generic-43-1.6.x86_64.qcow2
+          IMAGE_URL: https://eu.edge.kernel.org/fedora/releases/44/Cloud/x86_64/images/Fedora-Cloud-Base-Generic-44-1.7.x86_64.qcow2
         run: |
           echo "Prepare folders..."
           mkdir -p ${BASE_DIR}
@@ -34,5 +34,6 @@ jobs:
           sha256sum "${BASE_DIR}/${IMAGE_NAME}.qcow2"
 
           echo "Pushing image..."
-          ducttape push ${IMAGE_NAME} ghcr.io/ducttape-infra/cloud-images/fedora-cloud:43
+          ducttape push ${IMAGE_NAME} ghcr.io/ducttape-infra/cloud-images/fedora-cloud:44
+          ducttape push ${IMAGE_NAME} ghcr.io/ducttape-infra/cloud-images/fedora-cloud:latest
 
