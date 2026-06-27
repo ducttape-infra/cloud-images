@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Setup ducttape tool from releases
-        uses: ducttape-infra/ducttape-install-action@v0.8
+        uses: ducttape-infra/ducttape-install-action@v1.0
 
       - name: Push image to registry
         env:
