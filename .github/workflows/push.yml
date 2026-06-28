@@ -21,7 +21,7 @@ jobs:
           REGISTRY_USER: ${{ github.actor }}
           REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
           BASE_DIR: /home/runner/.local/share/ducttape/base-images
-          IMAGE_URL: https://cloud-images.ubuntu.com/releases/24.04/release/ubuntu-24.04-server-cloudimg-amd64.img
+          IMAGE_URL: https://cloud-images.ubuntu.com/releases/resolute/release/ubuntu-26.04-server-cloudimg-amd64.img
         run: |
           echo "Prepare folders..."
           mkdir -p ${BASE_DIR}
@@ -34,6 +34,6 @@ jobs:
           sha256sum "${BASE_DIR}/${IMAGE_NAME}.qcow2"
 
           echo "Pushing image..."
-          ducttape push ${IMAGE_NAME} ghcr.io/ducttape-infra/cloud-images/${IMAGE_NAME}:24.04
-
+          ducttape push ${IMAGE_NAME} ghcr.io/ducttape-infra/cloud-images/${IMAGE_NAME}:26.04
+          ducttape push ${IMAGE_NAME} ghcr.io/ducttape-infra/cloud-images/${IMAGE_NAME}:latest
 
